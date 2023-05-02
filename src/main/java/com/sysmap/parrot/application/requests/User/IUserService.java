@@ -9,4 +9,5 @@ public interface IUserService {
     String createUser(CreateUserRequest request);
     GetUserResponse getUserById(String Id);
     UpdateUserResponse updateUserById(String id, UpdateUserRequest request);
+    String deleteUserById(String id);
 }
