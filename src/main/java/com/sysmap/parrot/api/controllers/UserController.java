@@ -3,6 +3,8 @@ package com.sysmap.parrot.api.controllers;
 import com.sysmap.parrot.application.requests.User.CreateUser.CreateUserRequest;
 import com.sysmap.parrot.application.requests.User.GetUser.GetUserResponse;
 import com.sysmap.parrot.application.requests.User.IUserService;
+import com.sysmap.parrot.application.requests.User.UpdateUser.UpdateUserRequest;
+import com.sysmap.parrot.application.requests.User.UpdateUser.UpdateUserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +29,12 @@ public class UserController {
         var response = _userService.getUserById(id);
 
         return ResponseEntity.ok().body(response);
+    }
+
+    @PutMapping()
+    public ResponseEntity<UpdateUserResponse> updateUser(String id, @RequestBody UpdateUserRequest request) {
+       var response = _userService.updateUserById(id, request);
+
+       return ResponseEntity.ok().body(response);
     }
 }
