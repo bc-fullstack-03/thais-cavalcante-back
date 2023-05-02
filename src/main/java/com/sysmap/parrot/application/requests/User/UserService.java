@@ -9,8 +9,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
-public class UserService {
+public class UserService implements IUserService {
 
     @Autowired
     private IUserRepository _userRepository;
@@ -22,15 +24,16 @@ public class UserService {
         this.passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = this.passwordEncoder.encode(request.password);
 
-        var user = new User(request.name, request.email, encodedPassword);
+        var user = new User(request.name, request.email, encodedPassword, null);
 
         _userRepository.save(user);
 
         return user.getId().toString();
     }
 
-    public GetUserResponse getUserByEmail(String email) {
-        var user = _userRepository.getUserByEmail(email).get();
+    public GetUserResponse getUserById(String id) {
+        var uuid = UUID.fromString(id);
+        var user = _userRepository.findById(uuid).get();
 
         var response = new GetUserResponse(user.getId(), user.getName(), user.getEmail());
 

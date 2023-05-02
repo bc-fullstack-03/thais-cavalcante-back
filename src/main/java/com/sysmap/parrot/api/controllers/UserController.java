@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
@@ -24,8 +23,8 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<GetUserResponse> getUser(String email) {
-        var response = _userService.getUserByEmail(email);
+    public ResponseEntity<GetUserResponse> getUser(String id) {
+        var response = _userService.getUserById(id);
 
         return ResponseEntity.ok().body(response);
     }
