@@ -66,4 +66,14 @@ public class UserService implements IUserService {
 
         return response;
     }
+
+    public String deleteUserById(String id) {
+        var uuid = UUID.fromString(id);
+        var user = _userRepository.findById(uuid).get();
+
+        _userRepository.delete(user);
+
+        var response = "Usuário excluído com sucesso";
+        return response;
+    }
 }

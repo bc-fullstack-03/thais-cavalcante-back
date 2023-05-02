@@ -37,4 +37,11 @@ public class UserController {
 
        return ResponseEntity.ok().body(response);
     }
+
+    @DeleteMapping()
+    public ResponseEntity<String> deleteUser(String id) {
+        var response = _userService.deleteUserById(id);
+
+        return ResponseEntity.ok().body(response);
+    }
 }
