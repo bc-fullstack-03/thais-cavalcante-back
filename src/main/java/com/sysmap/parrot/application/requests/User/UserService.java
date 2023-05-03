@@ -7,7 +7,6 @@ import com.sysmap.parrot.application.requests.User.UpdateUser.UpdateUserResponse
 import com.sysmap.parrot.domain.entities.User;
 import com.sysmap.parrot.infrastructure.data.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +18,15 @@ public class UserService implements IUserService {
     @Autowired
     private IUserRepository _userRepository;
 
-    PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder _passwordEncoder;
 
     public String createUser(CreateUserRequest request) {
 
-        this.passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = this.passwordEncoder.encode(request.password);
+        var encodedPassword = _passwordEncoder.encode(request.password);
 
-        var user = new User(request.name, request.email, encodedPassword, null);
+        var user = new User(request.name, request.email);
+        user.setPassword(encodedPassword);
 
         _userRepository.save(user);
 
@@ -46,8 +46,7 @@ public class UserService implements IUserService {
         var uuid = UUID.fromString(id);
         var user = _userRepository.findById(uuid).get();
 
-        this.passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = this.passwordEncoder.encode(request.password);
+        var encodedPassword = _passwordEncoder.encode(request.password);
 
         user.setName(request.name);
         user.setEmail(request.email);
