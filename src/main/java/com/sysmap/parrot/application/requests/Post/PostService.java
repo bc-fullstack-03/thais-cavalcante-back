@@ -66,4 +66,14 @@ public class PostService implements IPostService{
 
         return response;
     }
+
+    public String deletePostById(String id) {
+        var uuid = UUID.fromString(id);
+        var user = _postRepository.findById(uuid).get();
+
+        _postRepository.delete(user);
+
+        var response = "Post excluído com sucesso";
+        return response;
+    }
 }

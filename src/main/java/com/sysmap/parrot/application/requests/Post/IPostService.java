@@ -9,4 +9,5 @@ public interface IPostService {
     String createPost(String authorId, CreatePostRequest request);
     List<GetPostResponse> getPosts(Integer page, Integer size);
     GetPostResponse getPostById(String id);
+    String deletePostById(String id);
 }

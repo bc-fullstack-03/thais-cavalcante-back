@@ -38,4 +38,11 @@ public class PostController {
 
         return ResponseEntity.ok().body(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable String id) {
+        var response = _postService.deletePostById(id);
+
+        return ResponseEntity.ok().body(response);
+    }
 }
