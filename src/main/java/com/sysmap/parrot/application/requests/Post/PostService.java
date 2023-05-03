@@ -49,4 +49,21 @@ public class PostService implements IPostService{
 
         return postList;
     }
+
+    public GetPostResponse getPostById(String id) {
+        var transformedId = UUID.fromString(id);
+        var post = _postRepository.findById(transformedId).get();
+
+        var response = new GetPostResponse(
+                post.getId(),
+                post.getContent(),
+                post.getImage(),
+                post.getCreatedAt(),
+                post.getAuthorId(),
+                post.getComments(),
+                post.getLikes()
+        );
+
+        return response;
+    }
 }

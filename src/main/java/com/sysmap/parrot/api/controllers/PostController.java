@@ -31,4 +31,11 @@ public class PostController {
 
         return ResponseEntity.ok().body(response);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GetPostResponse> getPost(@PathVariable String id) {
+        var response = _postService.getPostById(id);
+
+        return ResponseEntity.ok().body(response);
+    }
 }
