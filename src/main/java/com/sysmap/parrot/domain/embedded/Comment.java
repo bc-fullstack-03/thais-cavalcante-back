@@ -13,15 +13,13 @@ public class Comment {
     private String content;
     private Date createdAt;
     private UUID authorId;
-    private UUID postId;
     private List<Like> likes;
 
-    public Comment (String content, UUID authorId, UUID postId) {
+    public Comment (String content, UUID authorId) {
         this.setId();
         this.createdAt = getCurrentDateTime();
         this.content = content;
         this.authorId = authorId;
-        this.postId = postId;
         this.likes = new ArrayList<>();
     }
 
