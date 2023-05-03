@@ -17,12 +17,10 @@ public class User implements UserDetails {
     private String password;
     private String pictureUrl;
 
-    public User (String name, String email, String password, String pictureUrl) {
+    public User (String name, String email) {
         this.setId();
         this.name = name;
         this.email = email;
-        this.password = password;
-        this.pictureUrl = pictureUrl;
     }
 
     protected void setId() {
