@@ -1,7 +1,9 @@
 package com.sysmap.parrot.application.requests.Post;
 
+import com.sysmap.parrot.application.requests.Comment.CreateComment.CreateCommentRequest;
 import com.sysmap.parrot.application.requests.Post.CreatePost.CreatePostRequest;
 import com.sysmap.parrot.application.requests.Post.GetPost.GetPostResponse;
+import com.sysmap.parrot.domain.embedded.Comment;
 import com.sysmap.parrot.domain.entities.Post;
 import com.sysmap.parrot.infrastructure.data.IPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,12 +79,15 @@ public class PostService implements IPostService{
         return response;
     }
 
-    public Post findPostById(UUID id) {
-        var post = _postRepository.findById(id).get();
-        return post;
-    }
+    public String createCommentToPost(String authorId, String postId, CreateCommentRequest request) {
+        var authorUuid = UUID.fromString(authorId);
+        var postUuid = UUID.fromString(postId);
 
-    public void savePost(Post post) {
+        var post = _postRepository.findById(postUuid).get();
+        var comment = new Comment(request.content, authorUuid);
+
+        post.getComments().add(comment);
         _postRepository.save(post);
+        return comment.getId().toString();
     }
 }
