@@ -4,11 +4,15 @@ import com.sysmap.parrot.application.requests.User.CreateUser.CreateUserRequest;
 import com.sysmap.parrot.application.requests.User.GetUser.GetUserResponse;
 import com.sysmap.parrot.application.requests.User.UpdateUser.UpdateUserRequest;
 import com.sysmap.parrot.application.requests.User.UpdateUser.UpdateUserResponse;
+import com.sysmap.parrot.application.requests.fileUpload.IFileUploadService;
 import com.sysmap.parrot.domain.entities.User;
 import com.sysmap.parrot.infrastructure.data.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -20,6 +24,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private PasswordEncoder _passwordEncoder;
+
+    @Autowired
+    private IFileUploadService _fileUploadService;
 
     public String createUser(CreateUserRequest request) {
 
@@ -74,5 +81,22 @@ public class UserService implements IUserService {
 
         var response = "Usuário excluído com sucesso";
         return response;
+    }
+
+    public void uploadPhoto(MultipartFile photo) throws Exception {
+        var user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        var photoUri = "";
+
+        try {
+            var fileName = user.getId() + "." + photo.getOriginalFilename().substring(photo.getOriginalFilename().lastIndexOf(".") + 1);
+            photoUri = _fileUploadService.upload(photo, fileName);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+
+        user.setPictureUrl(photoUri);
+        _userRepository.save(user);
+
     }
 }
