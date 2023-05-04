@@ -1,5 +1,6 @@
 package com.sysmap.parrot.application.requests.Post;
 
+import com.sysmap.parrot.application.requests.Comment.CreateComment.CreateCommentRequest;
 import com.sysmap.parrot.application.requests.Post.CreatePost.CreatePostRequest;
 import com.sysmap.parrot.application.requests.Post.GetPost.GetPostResponse;
 import com.sysmap.parrot.domain.entities.Post;
@@ -12,6 +13,5 @@ public interface IPostService {
     List<GetPostResponse> getPosts(Integer page, Integer size);
     GetPostResponse getPostById(String id);
     String deletePostById(String id);
-    Post findPostById(UUID id);
-    void savePost(Post post);
+    String createCommentToPost(String authorId, String postId, CreateCommentRequest request);
 }
