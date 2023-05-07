@@ -1,13 +1,13 @@
 package com.sysmap.parrot.api.controllers;
 
 import com.sysmap.parrot.application.requests.Comment.CreateComment.CreateCommentRequest;
-import com.sysmap.parrot.application.requests.Post.CreatePost.CreatePostRequest;
 import com.sysmap.parrot.application.requests.Post.GetPost.GetPostResponse;
 import com.sysmap.parrot.application.requests.Post.IPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,8 +19,8 @@ public class PostController {
     private IPostService _postService;
 
     @PostMapping()
-    public ResponseEntity<String> createPost(@RequestParam String authorId, @RequestBody CreatePostRequest request) {
-        var response = _postService.createPost(authorId, request);
+    public ResponseEntity<String> createPost(@RequestParam(name = "content", required = false) String content, @RequestPart(name = "photo", required = false) MultipartFile photo) throws Exception {
+        var response = _postService.createPost(content, photo);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
@@ -41,17 +41,37 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable String id) {
+    public ResponseEntity<String> deletePost(@PathVariable String id) throws Exception {
         var response = _postService.deletePostById(id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    }
+
+    @PostMapping("/{postId}/comments")
+    public ResponseEntity<String> createCommentToPost(@PathVariable String postId, @RequestBody CreateCommentRequest request) throws Exception {
+        var response = _postService.createCommentToPost(postId, request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @DeleteMapping("/{postId}/comments/{commentId}")
+    public ResponseEntity<String> deleteCommentToPost(@PathVariable String postId, @PathVariable String commentId) throws Exception {
+        var response = _postService.deleteCommentToPost(postId, commentId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    }
+
+    @PostMapping("/{postId}/likes")
+    public ResponseEntity<String> likeOrRemoveLikeFromPost(@PathVariable String postId) throws Exception {
+        var response = _postService.likeOrRemoveLikeFromPost(postId);
 
         return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("/{postId}/comments")
-    public ResponseEntity<String> createCommentToPost(@PathVariable String postId, @RequestParam String authorId, @RequestBody CreateCommentRequest request) {
-        var response = _postService.createCommentToPost(authorId, postId, request);
+    @PostMapping("/{postId}/comments/{commentId}/likes")
+    public ResponseEntity<String> likeOrRemoveLikeFromComment(@PathVariable String postId, @PathVariable String commentId) throws Exception {
+        var response = _postService.likeOrRemoveLikeFromComment(postId, commentId);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
+        return ResponseEntity.ok().body(response);
     }
 }

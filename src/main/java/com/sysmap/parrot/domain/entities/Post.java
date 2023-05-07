@@ -19,11 +19,10 @@ public class Post {
     private List<Comment> comments;
     private List<Like> likes;
 
-    public Post (String content, String image, UUID authorId) {
+    public Post (String content, UUID authorId) {
         this.setId();
         this.createdAt = getCurrentDateTime();
         this.content = content;
-        this.image = image;
         this.authorId = authorId;
         this.comments = new ArrayList<>();
         this.likes = new ArrayList<>();
