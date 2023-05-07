@@ -5,5 +5,4 @@ import lombok.Data;
 @Data
 public class CreatePostRequest {
     public String content;
-    public String image;
 }
