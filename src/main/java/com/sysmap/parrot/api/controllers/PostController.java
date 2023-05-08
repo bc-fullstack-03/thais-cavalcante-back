@@ -19,7 +19,7 @@ public class PostController {
     private IPostService _postService;
 
     @PostMapping()
-    public ResponseEntity<String> createPost(@RequestParam(name = "content", required = false) String content, @RequestPart(name = "photo", required = false) MultipartFile photo) throws Exception {
+    public ResponseEntity<String> createPost(@RequestParam(name = "content", required = false) String content, @RequestPart(name = "photo", required = false) MultipartFile photo) {
         var response = _postService.createPost(content, photo);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -41,35 +41,35 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable String id) throws Exception {
+    public ResponseEntity<String> deletePost(@PathVariable String id) {
         var response = _postService.deletePostById(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 
     @PostMapping("/{postId}/comments")
-    public ResponseEntity<String> createCommentToPost(@PathVariable String postId, @RequestBody CreateCommentRequest request) throws Exception {
+    public ResponseEntity<String> createCommentToPost(@PathVariable String postId, @RequestBody CreateCommentRequest request) {
         var response = _postService.createCommentToPost(postId, request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/{postId}/comments/{commentId}")
-    public ResponseEntity<String> deleteCommentToPost(@PathVariable String postId, @PathVariable String commentId) throws Exception {
+    public ResponseEntity<String> deleteCommentToPost(@PathVariable String postId, @PathVariable String commentId) {
         var response = _postService.deleteCommentToPost(postId, commentId);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 
     @PostMapping("/{postId}/likes")
-    public ResponseEntity<String> likeOrRemoveLikeFromPost(@PathVariable String postId) throws Exception {
+    public ResponseEntity<String> likeOrRemoveLikeFromPost(@PathVariable String postId) {
         var response = _postService.likeOrRemoveLikeFromPost(postId);
 
         return ResponseEntity.ok().body(response);
     }
 
     @PostMapping("/{postId}/comments/{commentId}/likes")
-    public ResponseEntity<String> likeOrRemoveLikeFromComment(@PathVariable String postId, @PathVariable String commentId) throws Exception {
+    public ResponseEntity<String> likeOrRemoveLikeFromComment(@PathVariable String postId, @PathVariable String commentId) {
         var response = _postService.likeOrRemoveLikeFromComment(postId, commentId);
 
         return ResponseEntity.ok().body(response);
