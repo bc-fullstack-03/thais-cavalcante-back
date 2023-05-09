@@ -7,13 +7,11 @@ public class UpdateUserResponse {
     public String name;
     public String email;
     public String password;
-    public String profileUrl;
 
-    public UpdateUserResponse(UUID id, String name, String email, String password, String profileUrl) {
+    public UpdateUserResponse(UUID id, String name, String email, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
-        this.profileUrl = profileUrl;
     }
 }
