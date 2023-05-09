@@ -47,8 +47,8 @@ public class PostService implements IPostService{
             var fileName = post.getId() + "." + photo.getOriginalFilename().substring(photo.getOriginalFilename().lastIndexOf(".") + 1);
             try {
                 photoUri = _fileUploadService.upload(photo, fileName);
-            } catch (Exception e) {
-                throw new BadRequestException("Erro ao fazer upload da foto");
+            } catch (BadRequestException e) {
+                throw new BadRequestException("Unable to upload image!");
             }
         }
 
@@ -83,7 +83,7 @@ public class PostService implements IPostService{
         var post = _postRepository.findById(UUID.fromString(id)).orElse(null);
 
         if (post == null) {
-            throw new NotFoundException("Post não encontrado");
+            throw new NotFoundException("Post not found!");
         }
 
         var response = new GetPostResponse(
@@ -104,16 +104,16 @@ public class PostService implements IPostService{
             var post = _postRepository.findById(UUID.fromString(id)).orElse(null);
 
             if (post == null) {
-                throw new NotFoundException("Post não encontrado");
+                throw new NotFoundException("Post not found!");
             }
 
             if (!authenticatedUser.getId().equals(post.getAuthorId())) {
-                throw new ForbiddenException("Você não tem permissão para excluir este post");
+                throw new ForbiddenException("You don't have permission to delete this post!");
             }
 
             _postRepository.delete(post);
 
-            return "Post excluído com sucesso";
+            return "Post deleted successfully!";
     }
 
     public String createCommentToPost(String postId, CreateCommentRequest request) {
@@ -121,7 +121,7 @@ public class PostService implements IPostService{
         var post = _postRepository.findById(UUID.fromString(postId)).orElse(null);
 
         if (post == null) {
-            throw new NotFoundException("Post não encontrado");
+            throw new NotFoundException("Post not found!");
         }
 
         var comment = new Comment(request.content, authenticatedUser.getId());
@@ -136,25 +136,25 @@ public class PostService implements IPostService{
         var post = _postRepository.findById(UUID.fromString(postId)).orElse(null);
 
         if (post == null) {
-            throw new NotFoundException("Post não encontrado");
+            throw new NotFoundException("Post not found!");
         }
 
         var comment = post.getComments().stream().filter(c -> c.getId().equals(UUID.fromString(commentId))).findFirst();
 
         if (comment.isEmpty()) {
-            throw new NotFoundException("Comentário não encontrado");
+            throw new NotFoundException("Comment not found!");
         }
 
         var commentToDelete = comment.get();
 
         if (!authenticatedUser.getId().equals(commentToDelete.getAuthorId()) && !authenticatedUser.getId().equals(post.getAuthorId())) {
-            throw new ForbiddenException("Você não tem permissão para excluir este comentário");
+            throw new ForbiddenException("You don't have permission to delete this post!");
         }
 
         post.getComments().remove(commentToDelete);
         _postRepository.save(post);
 
-        return "Comentário excluído com sucesso!";
+        return "Comment deleted successfully!";
     }
 
     public String likeOrRemoveLikeFromPost(String postId) {
@@ -162,7 +162,7 @@ public class PostService implements IPostService{
         var post = _postRepository.findById(UUID.fromString(postId)).orElse(null);
 
         if (post == null) {
-            throw new NotFoundException("Post não encontrado!");
+            throw new NotFoundException("Post not found!");
         }
 
         var like = post.getLikes().stream().filter(l -> l.getAuthorId().equals(authenticatedUser.getId())).findFirst();
@@ -170,12 +170,12 @@ public class PostService implements IPostService{
         if (like.isEmpty()) {
             var likePost = post.getLikes().add(new Like(authenticatedUser.getId()));
             _postRepository.save(post);
-            return "Post curtido!";
+            return "Liked post!";
         }
 
         post.getLikes().remove(like.get());
         _postRepository.save(post);
-        return "Curtida removida do Post!";
+        return "Like removed from post!";
     }
 
     public String likeOrRemoveLikeFromComment(String postId, String commentId) {
@@ -183,13 +183,13 @@ public class PostService implements IPostService{
         var post = _postRepository.findById(UUID.fromString(postId)).orElse(null);
 
         if (post == null) {
-            throw new NotFoundException("Post não encontrado");
+            throw new NotFoundException("Post not found!");
         }
 
         var comment = post.getComments().stream().filter(c -> c.getId().equals(UUID.fromString(commentId))).findFirst();
 
         if (comment.isEmpty()) {
-            throw new NotFoundException("Comentário não encontrado");
+            throw new NotFoundException("Comment not found");
         }
 
         var commentToLikeOrRemoveLike = comment.get();
@@ -199,11 +199,15 @@ public class PostService implements IPostService{
         if (like.isEmpty()) {
             commentToLikeOrRemoveLike.getLikes().add(new Like(authenticatedUser.getId()));
             _postRepository.save(post);
-            return "Comentário curtido!";
+            return "Liked comment!";
         }
 
         commentToLikeOrRemoveLike.getLikes().remove(like.get());
         _postRepository.save(post);
-        return "Curtida removida do Comentário!";
+        return "Like removed from comment!";
+    }
+
+    public List<Post> getPosts() {
+        return _postRepository.findAll();
     }
 }
