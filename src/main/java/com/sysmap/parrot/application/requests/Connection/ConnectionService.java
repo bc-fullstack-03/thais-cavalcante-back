@@ -35,7 +35,7 @@ public class ConnectionService implements IConnectionService {
         var authenticatedUser = getAuthenticatedUser();
 
         if (authenticatedUser.getId().equals(UUID.fromString(userToFollowId))) {
-            throw new ForbiddenException("Não é possível seguir seu próprio perfil");
+            throw new ForbiddenException("It is not possible to follow your own profile!");
         }
 
         var authenticatedUserConnection = _connectionRepository.getConnectionByUserId(authenticatedUser.getId()).orElseGet(() -> {
@@ -60,7 +60,7 @@ public class ConnectionService implements IConnectionService {
             _connectionRepository.save(authenticatedUserConnection);
             _connectionRepository.save(userToFollowConnection);
 
-            return "Usuário removido da sua rede!";
+            return "User was unfollowed!";
 
         } else {
             following.add(new FollowingUser(UUID.fromString(userToFollowId)));
@@ -69,7 +69,7 @@ public class ConnectionService implements IConnectionService {
             _connectionRepository.save(authenticatedUserConnection);
             _connectionRepository.save(userToFollowConnection);
 
-            return "Usuário adicionado a sua rede!";
+            return "Following user!!";
         }
     }
 
@@ -77,14 +77,14 @@ public class ConnectionService implements IConnectionService {
         var connection = _connectionRepository.getConnectionByUserId(UUID.fromString(userId)).orElse(null);
 
         if (connection == null) {
-            throw new NotFoundException("Esse usuário ainda não segue ninguém");
+            throw new NotFoundException("This user is not following anyone yet!");
         }
         List<GetFollowedUserResponse> followedUserList = new ArrayList<>();
 
         var followedUsers = connection.getFollowing();
 
         if (followedUsers.isEmpty()) {
-            throw new NotFoundException("Esse usuário ainda não segue ninguém");
+            throw new NotFoundException("This user is not following anyone yet!");
         }
 
         for (FollowingUser followedUser : followedUsers) {
@@ -111,14 +111,14 @@ public class ConnectionService implements IConnectionService {
         var connection = _connectionRepository.getConnectionByUserId(UUID.fromString(userId)).orElse(null);
 
         if (connection == null) {
-            throw new NotFoundException("Esse usuário ainda não tem seguidores");
+            throw new NotFoundException("This user has no followers yet!");
         }
         List<GetFollowerUserResponse> followerUserList = new ArrayList<>();
 
         var followerUsers = connection.getFollowers();
 
         if (followerUsers.isEmpty()) {
-            throw new NotFoundException("Esse usuário ainda não tem seguidores");
+            throw new NotFoundException("This user has no followers yet!");
         }
 
         for (FollowerUser followerUser : followerUsers) {

@@ -36,7 +36,7 @@ public class FeedService implements IFeedService{
         var followingUsers = _connectionService.getFollowingList(authenticatedUser.getId().toString());
 
         if (followingUsers.isEmpty() && !posts.stream().anyMatch(post -> post.getAuthorId().equals(authenticatedUser.getId()))) {
-            throw new NotFoundException("Nenhum post a ser exibido no feed");
+            throw new NotFoundException("No posts to display in feed!");
         }
 
         boolean foundMatchingPost = false;
@@ -60,7 +60,7 @@ public class FeedService implements IFeedService{
         }
 
         if(!foundMatchingPost && !followingUsers.isEmpty()) {
-            throw new NotFoundException("Nenhum post a ser exibido no feed");
+            throw new NotFoundException("No posts to display in feed!");
         }
         return feed;
     }

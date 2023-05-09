@@ -1,17 +1,16 @@
 package com.sysmap.parrot.application.requests.User;
 
 import com.sysmap.parrot.application.requests.User.CreateUser.CreateUserRequest;
+import com.sysmap.parrot.application.requests.User.CreateUser.CreateUserResponse;
 import com.sysmap.parrot.application.requests.User.GetUser.GetUserResponse;
 import com.sysmap.parrot.application.requests.User.UpdateUser.UpdateUserRequest;
 import com.sysmap.parrot.application.requests.User.UpdateUser.UpdateUserResponse;
 import com.sysmap.parrot.application.requests.fileUpload.IFileUploadService;
-import com.sysmap.parrot.domain.entities.Connection;
 import com.sysmap.parrot.domain.entities.User;
 import com.sysmap.parrot.exception.badRequestException.BadRequestException;
 import com.sysmap.parrot.exception.notFoundException.NotFoundException;
 import com.sysmap.parrot.infrastructure.data.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +30,7 @@ public class UserService implements IUserService {
     @Autowired
     private IFileUploadService _fileUploadService;
 
-    public String createUser(CreateUserRequest request) {
+    public CreateUserResponse createUser(CreateUserRequest request) {
 
         var registeredUser = _userRepository.getUserByEmail(request.email);
 
@@ -45,7 +44,9 @@ public class UserService implements IUserService {
 
         _userRepository.save(user);
 
-        return user.getId().toString();
+        var response = new CreateUserResponse(user.getId());
+
+        return response;
     }
 
     public GetUserResponse getUserById(String id) {
@@ -100,7 +101,7 @@ public class UserService implements IUserService {
 
         _userRepository.delete(user);
 
-        return "Usuário excluído com sucesso";
+        return "User deleted successfully!";
     }
 
     public void uploadPhoto(String id, MultipartFile photo) {

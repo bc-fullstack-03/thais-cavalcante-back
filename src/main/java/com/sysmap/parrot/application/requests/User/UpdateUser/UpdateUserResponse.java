@@ -1,7 +1,10 @@
 package com.sysmap.parrot.application.requests.User.UpdateUser;
 
+import lombok.Data;
+
 import java.util.UUID;
 
+@Data
 public class UpdateUserResponse {
     public UUID id;
     public String name;
