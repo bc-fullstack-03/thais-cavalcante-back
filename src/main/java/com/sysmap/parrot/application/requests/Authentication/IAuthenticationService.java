@@ -4,6 +4,5 @@ import com.sysmap.parrot.application.requests.Authentication.Authenticate.Authen
 import com.sysmap.parrot.application.requests.Authentication.Authenticate.AuthenticateResponse;
 
 public interface IAuthenticationService {
-//    String authenticateUser(AuthenticationRequest request);
     AuthenticateResponse authenticate(AuthenticateRequest request) throws Exception;
 }

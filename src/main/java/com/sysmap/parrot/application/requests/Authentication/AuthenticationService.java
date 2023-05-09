@@ -28,7 +28,7 @@ public class AuthenticationService implements IAuthenticationService {
         }
 
         if (!_passwordEncoder.matches(request.password, user.getPassword())) {
-            throw new Exception("Credenciais inválidas!");
+            throw new Exception("Invalid credentials!");
         }
 
         var token = _jwtService.generateToken(user.getId());

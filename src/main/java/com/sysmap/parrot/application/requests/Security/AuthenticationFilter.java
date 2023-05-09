@@ -44,7 +44,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         var userId = request.getHeader("RequestedBy");
 
         if (token == null || userId == null || !token.startsWith("Bearer ")) {
-            response.getWriter().write("Usuário não autenticado!");
+            response.getWriter().write("Unauthenticated user!!");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return;
         }
@@ -71,7 +71,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
         } else {
-            response.getWriter().write("Token inválido!");
+            response.getWriter().write("Invalid token!");
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return;
         }

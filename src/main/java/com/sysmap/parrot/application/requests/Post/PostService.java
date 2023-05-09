@@ -1,6 +1,8 @@
 package com.sysmap.parrot.application.requests.Post;
 
 import com.sysmap.parrot.application.requests.Comment.CreateComment.CreateCommentRequest;
+import com.sysmap.parrot.application.requests.Comment.CreateComment.CreateCommentResponse;
+import com.sysmap.parrot.application.requests.Post.CreatePost.CreatePostResponse;
 import com.sysmap.parrot.application.requests.Post.GetPost.GetPostResponse;
 import com.sysmap.parrot.application.requests.fileUpload.IFileUploadService;
 import com.sysmap.parrot.domain.embedded.Comment;
@@ -35,7 +37,7 @@ public class PostService implements IPostService{
         return ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }
 
-    public String createPost(String content, MultipartFile photo) {
+    public CreatePostResponse createPost(String content, MultipartFile photo) {
         var authenticatedUser = getAuthenticatedUser();
 
         var post = new Post(content, authenticatedUser.getId());
@@ -55,7 +57,9 @@ public class PostService implements IPostService{
         post.setImage(photoUri);
         _postRepository.save(post);
 
-        return post.getId().toString();
+        var response = new CreatePostResponse(post.getId());
+
+        return response;
     }
 
     public List<GetPostResponse> getPosts(Integer page, Integer size) {
@@ -116,7 +120,7 @@ public class PostService implements IPostService{
             return "Post deleted successfully!";
     }
 
-    public String createCommentToPost(String postId, CreateCommentRequest request) {
+    public CreateCommentResponse createCommentToPost(String postId, CreateCommentRequest request) {
         var authenticatedUser = getAuthenticatedUser();
         var post = _postRepository.findById(UUID.fromString(postId)).orElse(null);
 
@@ -128,7 +132,9 @@ public class PostService implements IPostService{
 
         post.getComments().add(comment);
         _postRepository.save(post);
-        return comment.getId().toString();
+
+        var response = new CreateCommentResponse(comment.getId());
+        return response;
     }
 
     public String deleteCommentToPost(String postId, String commentId) {
