@@ -18,16 +18,16 @@ public class AwsConfig {
 
     @Bean
     public AmazonS3 amazonS3() {
-        String localstackUrl = "http://localstack_demo:4566";
+        String localStackUrl = "http://localstack-parrot:4566";
 
         if (apiEnv.equals("local")) {
-            localstackUrl = "http://s3.localhost.localstack.cloud:4566";
+            localStackUrl = "http://s3.localhost.localstack.cloud:4566";
         }
 
         return AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials("mykey", "mykey")))
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(localstackUrl, Regions.US_WEST_2.getName()))
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(localStackUrl, Regions.US_WEST_2.getName()))
                 .build();
     }
 }
