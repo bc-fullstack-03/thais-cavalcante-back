@@ -4,6 +4,7 @@ import com.sysmap.parrot.application.requests.Authentication.Authenticate.Authen
 import com.sysmap.parrot.application.requests.Authentication.Authenticate.AuthenticateResponse;
 import com.sysmap.parrot.application.requests.Security.IJwtService;
 import com.sysmap.parrot.application.requests.User.IUserService;
+import com.sysmap.parrot.exception.notFoundException.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class AuthenticationService implements IAuthenticationService {
         var user = _userService.getUser(request.email);
 
         if(user == null) {
-            return null;
+            throw new NotFoundException("User not found");
         }
 
         if (!_passwordEncoder.matches(request.password, user.getPassword())) {
