@@ -27,3 +27,5 @@ services:
     container_name: parrot-app
     ports:
       - "8082:8082"
+    environment:
+      - API_ENV=container
